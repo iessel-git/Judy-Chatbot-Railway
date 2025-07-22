@@ -1,10 +1,10 @@
 flask
-gunicorn
-langchain==0.2.1
-langchain-community==0.2.1
-langchain-openai==0.1.7
-chromadb==0.4.24
-openai==1.30.1
+requests
 beautifulsoup4
 html5lib
-requests
+langchain==0.1.20
+langchain-community==0.0.29
+langchain-openai==0.0.6
+chromadb
+openai
+tiktoken
