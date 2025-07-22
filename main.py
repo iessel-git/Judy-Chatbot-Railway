@@ -31,12 +31,10 @@ def crawl_website(base_url, max_pages=10):
             res = requests.get(url, timeout=10)
             soup = BeautifulSoup(res.text, "html5lib")
 
-            # ✅ Extract visible text (paragraphs, headings, list items)
             page_text = " ".join([p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "li"]) if p.get_text().strip()])
             if page_text:
                 texts.append(Document(page_content=page_text))
 
-            # ✅ Find and queue internal links
             for link in soup.find_all("a", href=True):
                 full_url = urljoin(base_url, link["href"])
                 if base_url in full_url and full_url not in visited:
@@ -87,4 +85,5 @@ def ask():
     return jsonify({"answer": response})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
