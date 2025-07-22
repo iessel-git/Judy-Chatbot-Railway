@@ -3,7 +3,7 @@ requests
 beautifulsoup4
 html5lib
 langchain==0.1.20
-langchain-community<0.1 and >=0.0.38
+langchain-community
 langchain-openai==0.0.6
 chromadb
 openai
