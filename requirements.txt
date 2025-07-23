@@ -1,10 +1,2 @@
-flask
-flask-cors
-langchain
-langchain-openai
-langchain-community
-chromadb
-bs4
-html5lib
-requests
-gunicorn
+flask==2.3.3
+gunicorn==21.2.0
