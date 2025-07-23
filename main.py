@@ -6,16 +6,23 @@ from langchain.schema import Document
 import os, requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-#from flask_cors import CORS
 
 app = Flask(__name__)
 
-# ✅ API Key (set in Railway Dashboard > Variables)
+# ✅ Manual CORS fix (no flask-cors needed)
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+    return response
+
+# ✅ API Key (Railway > Variables)
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("⚠️ Please set the OPENAI_API_KEY environment variable in Railway.")
 
-BASE_URL = "https://www.csetechsolution.com"  # Change this to any website you want
+BASE_URL = "https://www.csetechsolution.com"  # Change to your target website
 
 # ✅ Crawl website pages & extract text
 def crawl_website(base_url, max_pages=10):
@@ -32,10 +39,14 @@ def crawl_website(base_url, max_pages=10):
             res = requests.get(url, timeout=10)
             soup = BeautifulSoup(res.text, "html5lib")
 
-            page_text = " ".join([p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "li"]) if p.get_text().strip()])
+            # Extract visible text
+            page_text = " ".join(
+                [p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "li"]) if p.get_text().strip()]
+            )
             if page_text:
                 texts.append(Document(page_content=page_text))
 
+            # Queue internal links
             for link in soup.find_all("a", href=True):
                 full_url = urljoin(base_url, link["href"])
                 if base_url in full_url and full_url not in visited:
@@ -53,7 +64,7 @@ if not website_docs:
     print("⚠️ No website data found, using fallback docs...")
     website_docs = [
         Document(page_content="CSE Tech Solutions provides IT consulting, cloud, and AI services."),
-        Document(page_content="Rose Tavern is a modern upscale hotel in Tema, Ghana.")
+        Document(page_content="Rose Tavern is a modern upscale hotel in Tema, Ghana."),
     ]
 
 # ✅ Create Vector Store
