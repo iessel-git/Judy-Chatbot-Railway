@@ -1,10 +1,10 @@
 flask
-requests
-beautifulsoup4
-html5lib
-langchain==0.1.20
+flask-cors
+langchain
+langchain-openai
 langchain-community
-langchain-openai==0.0.6
 chromadb
-openai
-tiktoken
+bs4
+html5lib
+requests
+gunicorn
