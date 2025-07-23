@@ -7,7 +7,6 @@ import os, requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from flask_cors import CORS
-CORS(app)
 
 app = Flask(__name__)
 
